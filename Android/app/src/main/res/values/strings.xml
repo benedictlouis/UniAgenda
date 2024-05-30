@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">UniAgenda-android</string>
+    <string name="title_activity_login2">LoginActivity2</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="fab_content_desc">Add Task</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_hint">Title</string>
+    <string name="course_hint">Course</string>
+    <string name="description_hint">Description</string>
+    <string name="deadline_hint">Deadline</string>
+    <string name="status_hint">Status</string>
+    <string name="type_hint">Type</string>
+    <string name="add_task_button_text">Add Task</string>
+</resources>
