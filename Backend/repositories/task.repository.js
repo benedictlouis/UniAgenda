@@ -1,7 +1,7 @@
 const { pool } = require("../config/db.config.js");
 const { v4: uuidv4 } = require('uuid');
 
-// Function to get all tasks
+// Get all tasks
 exports.getAllTasks = async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM task");
@@ -12,7 +12,7 @@ exports.getAllTasks = async (req, res) => {
     }
 };
 
-// Function to get a single task by ID
+// Get a single task by ID
 exports.getTaskById = async (req, res) => {
     const { task_id } = req.params;
     try {
@@ -27,7 +27,7 @@ exports.getTaskById = async (req, res) => {
     }
 };
 
-// Function to create a new task
+// Add a new task
 exports.addTask = async (req, res) => {
     const { task_title, course, task_description, task_deadline, task_status, task_type } = req.body;
     const task_id = uuidv4();
@@ -43,7 +43,7 @@ exports.addTask = async (req, res) => {
     }
 };
 
-// Function to update a task by ID
+// Update a task by ID
 exports.updateTask = async (req, res) => {
     const { task_id } = req.params;
     const { account_id, course_id, task_title, task_description, task_assigned, task_deadline, task_status, task_type } = req.body;
@@ -62,7 +62,7 @@ exports.updateTask = async (req, res) => {
     }
 };
 
-// Function to delete a task by ID
+// Delete a task by ID
 exports.deleteTask = async (req, res) => {
     const { task_id } = req.params;
     try {

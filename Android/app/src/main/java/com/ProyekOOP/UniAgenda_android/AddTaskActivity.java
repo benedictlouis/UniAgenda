@@ -1,7 +1,5 @@
 package com.ProyekOOP.UniAgenda_android;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,7 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ProyekOOP.UniAgenda_android.model.Task;
 import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -54,24 +56,34 @@ public class AddTaskActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type_array, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeAdapter);
-
     }
 
     private void showDateTimePicker() {
-        final Calendar currentDate = Calendar.getInstance();
-        calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    calendar.set(year, month, dayOfMonth);
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this,
-                            (view1, hourOfDay, minute) -> {
-                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                calendar.set(Calendar.MINUTE, minute);
-                                deadlineInput.setText(android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", calendar));
-                            }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false);
-                    timePickerDialog.show();
-                }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE));
-        datePickerDialog.show();
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar.setTimeInMillis(selection);
+            showTimePicker();
+        });
+
+        datePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+    }
+
+    private void showTimePicker() {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTitleText("Select time")
+                .build();
+
+        timePicker.addOnPositiveButtonClickListener(view -> {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+            deadlineInput.setText(android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", calendar));
+        });
+
+        timePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
     private void handleAddTask() {

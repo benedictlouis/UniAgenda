@@ -3,6 +3,7 @@ package com.ProyekOOP.UniAgenda_android;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -20,6 +21,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    SharedPreferences sharedPreferences;
+    private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_EMAIL = "email";
     private Context mContext;
     public TextView registerNow = null;
     public Button loginButton = null;
@@ -36,6 +41,14 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+
+        sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+
+        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         loginButton.setOnClickListener(v -> handleLogin());
         registerNow.setOnClickListener(v -> { moveActivity(this, RegisterActivity.class); });
@@ -55,14 +68,11 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Buat objek request
         Login login = new Login(emailS, passwordS);
 
-        // Panggil metode login dari ApiService
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<String> loginCall = apiService.login(login);
 
-        // Lakukan permintaan login
         loginCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -70,9 +80,15 @@ public class LoginActivity extends AppCompatActivity {
                     String message = response.body();
                     Log.d(TAG, "Login successful: " + message);
                     Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(KEY_IS_LOGGED_IN, true);
+                    editor.putString(KEY_EMAIL, emailS);
+                    editor.apply();
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish(); // Optional: to close the LoginActivity
+                    finish();
                 } else {
                     try {
                         String errorBody = response.errorBody().string();

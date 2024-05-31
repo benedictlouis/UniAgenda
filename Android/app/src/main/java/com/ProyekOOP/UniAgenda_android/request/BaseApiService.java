@@ -5,11 +5,13 @@ import com.ProyekOOP.UniAgenda_android.model.Signup;
 import com.ProyekOOP.UniAgenda_android.model.Task;
 
 import java.util.List;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface BaseApiService {
     @POST("/user/login")
@@ -23,5 +25,8 @@ public interface BaseApiService {
 
     @GET("/task/getAllTask")
     Call<List<Task>> getAllTask();
+
+    @GET("/task/getTaskById")
+    Call<Task> getTaskById(@Path("task_id") String taskId);
 
 }
