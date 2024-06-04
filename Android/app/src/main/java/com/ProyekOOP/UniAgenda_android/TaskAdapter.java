@@ -12,16 +12,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ProyekOOP.UniAgenda_android.model.Task;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private Context context;
     private List<Task> taskList;
+    private List<Task> filteredTaskList;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public TaskAdapter(Context context, List<Task> taskList) {
         this.context = context;
         this.taskList = taskList;
+        this.filteredTaskList = new ArrayList<>(taskList);
     }
 
     @NonNull
@@ -33,7 +40,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = taskList.get(position);
+        Task task = filteredTaskList.get(position);
         holder.taskTitle.setText(task.getTask_title());
         holder.taskDeadline.setText(task.getTask_deadline());
 
@@ -46,22 +53,37 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public int getItemCount() {
-        return taskList.size();
+        return filteredTaskList.size();
     }
 
-    public void removeTask(int position) {
-        taskList.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void removeTaskById(int taskId) {
-        for (int i = 0; i < taskList.size(); i++) {
-            if (taskList.get(i).getTask_id() == taskId) {
-                taskList.remove(i);
-                notifyItemRemoved(i);
-                break;
+    public void filterByDeadline(String deadline) {
+        filteredTaskList.clear();
+        for (Task task : taskList) {
+            try {
+                Date taskDate = dateFormat.parse(task.getTask_deadline());
+                Date filterDate = dateFormat.parse(deadline);
+                if (taskDate != null && filterDate != null && taskDate.equals(filterDate)) {
+                    filteredTaskList.add(task);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
+        notifyDataSetChanged();
+    }
+
+    public void filterByTitle(String query) {
+        filteredTaskList.clear();
+        if (query.isEmpty()) {
+            filteredTaskList.addAll(taskList);
+        } else {
+            for (Task task : taskList) {
+                if (task.getTask_title().toLowerCase().contains(query.toLowerCase())) {
+                    filteredTaskList.add(task);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
