@@ -12,7 +12,7 @@ public class RetrofitClient {
     public static Retrofit getClient(){
         if (retrofit == null){
             Gson gson = new GsonBuilder()
-                    .setLenient() // Aktifkan mode lenient
+                    .setLenient()
                     .create();
 
             retrofit = new Retrofit.Builder()

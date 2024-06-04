@@ -12,13 +12,14 @@ exports.login = async function (req, res) {
         }
         
         const storedPassword = result.rows[0].password;
-        
+        const accountId = result.rows[0].account_id;
+
         const passwordMatch = await bcrypt.compare(password, storedPassword);
         if (!passwordMatch) {
             return res.status(401).send("Password salah");
         }
-        
-        res.status(200).send("Login berhasil");
+                
+        res.status(200).json({ message: "Login berhasil", account_id: accountId });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");

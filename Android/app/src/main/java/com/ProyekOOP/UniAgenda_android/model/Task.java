@@ -1,10 +1,9 @@
 package com.ProyekOOP.UniAgenda_android.model;
 
-import java.util.UUID;
 
 public class Task {
-    private UUID task_id;
-    private UUID account_id;
+    private int task_id;  // Changed from String to int
+    private String account_id;  // Kept as String if it still needs to be unique
     private String task_title;
     private String course;
     private String task_description;
@@ -13,19 +12,19 @@ public class Task {
     private String task_type;
 
     // Getters and Setters
-    public UUID getTask_id() {
+    public int getTask_id() {
         return task_id;
     }
 
-    public void setTask_id(UUID task_id) {
+    public void setTask_id(int task_id) {
         this.task_id = task_id;
     }
 
-    public UUID getAccount_id() {
+    public String getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(UUID account_id) {
+    public void setAccount_id(String account_id) {
         this.account_id = account_id;
     }
 

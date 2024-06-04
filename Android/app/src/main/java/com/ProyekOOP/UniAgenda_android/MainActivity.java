@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.page_1){
             return true;
         }
-        else if(id == R.id.page_2){
+        else if(id == R.id.page_3){
             Intent intent = new Intent(this, AboutMeActivity.class);
             startActivity(intent);
             return true;
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
                 if (response.isSuccessful()) {
                     List<Task> tasks = response.body();
-                    taskAdapter = new TaskAdapter(tasks);
+                    taskAdapter = new TaskAdapter(MainActivity.this, tasks);
                     recyclerView.setAdapter(taskAdapter);
                 } else {
                     Toast.makeText(MainActivity.this, "Failed to load tasks", Toast.LENGTH_SHORT).show();

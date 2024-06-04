@@ -1,6 +1,8 @@
 package com.ProyekOOP.UniAgenda_android;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,6 +27,9 @@ import retrofit2.Response;
 public class AddTaskActivity extends AppCompatActivity {
 
     private TextInputEditText titleInput, courseInput, descriptionInput, deadlineInput;
+    private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_ACCOUNT_ID = "account_id";
+
     private Spinner statusInput, typeInput;
     private Button addTaskButton;
     private Calendar calendar;
@@ -47,15 +52,13 @@ public class AddTaskActivity extends AppCompatActivity {
 
         addTaskButton.setOnClickListener(v -> handleAddTask());
 
-        Spinner statusSpinner = findViewById(R.id.status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this, R.array.status_array, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        statusSpinner.setAdapter(statusAdapter);
+        statusInput.setAdapter(statusAdapter);
 
-        Spinner typeSpinner = findViewById(R.id.type_spinner);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type_array, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeAdapter);
+        typeInput.setAdapter(typeAdapter);
     }
 
     private void showDateTimePicker() {
@@ -99,6 +102,15 @@ public class AddTaskActivity extends AppCompatActivity {
             return;
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        String accountId = sharedPreferences.getString(KEY_ACCOUNT_ID, null);
+        Log.d("AddTaskActivity", "Retrieved account ID: " + accountId); // Debug log
+
+        if (accountId == null) {
+            Toast.makeText(this, "Account ID not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Task newTask = new Task();
         newTask.setTask_title(taskTitle);
         newTask.setCourse(course);
@@ -106,6 +118,7 @@ public class AddTaskActivity extends AppCompatActivity {
         newTask.setTask_deadline(taskDeadline);
         newTask.setTask_status(taskStatus);
         newTask.setTask_type(taskType);
+        newTask.setAccount_id(accountId);
 
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<String> call = apiService.addTask(newTask);

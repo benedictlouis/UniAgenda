@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.ProyekOOP.UniAgenda_android.model.Login;
+import com.ProyekOOP.UniAgenda_android.model.LoginResponse;
 import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
 
@@ -25,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_ACCOUNT_ID = "account_id";
     private Context mContext;
     public TextView registerNow = null;
     public Button loginButton = null;
@@ -59,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void handleLogin(){
+    private void handleLogin() {
         String emailS = email.getText().toString();
         String passwordS = password.getText().toString();
 
@@ -71,24 +74,33 @@ public class LoginActivity extends AppCompatActivity {
         Login login = new Login(emailS, passwordS);
 
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
-        Call<String> loginCall = apiService.login(login);
+        Call<LoginResponse> loginCall = apiService.login(login);
 
-        loginCall.enqueue(new Callback<String>() {
+        loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
-                    String message = response.body();
-                    Log.d(TAG, "Login successful: " + message);
-                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                    LoginResponse loginResponse = response.body();
+                    if (loginResponse != null) {
+                        String message = loginResponse.getMessage();
+                        String accountId = loginResponse.getAccount_id();
+                        Log.d(TAG, "Login successful: " + message);
+                        Log.d(TAG, "Account ID received: " + accountId);
+                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(KEY_IS_LOGGED_IN, true);
-                    editor.putString(KEY_EMAIL, emailS);
-                    editor.apply();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(KEY_IS_LOGGED_IN, true);
+                        editor.putString(KEY_EMAIL, emailS);
+                        editor.putString(KEY_ACCOUNT_ID, accountId);
+                        editor.apply();
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                        // Log stored account ID
+                        Log.d(TAG, "Stored account ID in SharedPreferences: " + accountId);
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     try {
                         String errorBody = response.errorBody().string();
@@ -103,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 t.printStackTrace();
                 Log.e(TAG, "onFailure: ", t);
                 Toast.makeText(mContext, "Connection Error", Toast.LENGTH_SHORT).show();
