@@ -1,8 +1,8 @@
 package com.ProyekOOP.UniAgenda_android;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -13,7 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ProyekOOP.UniAgenda_android.model.Task;
 import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -23,6 +27,9 @@ import retrofit2.Response;
 public class AddTaskActivity extends AppCompatActivity {
 
     private TextInputEditText titleInput, courseInput, descriptionInput, deadlineInput;
+    private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_ACCOUNT_ID = "account_id";
+
     private Spinner statusInput, typeInput;
     private Button addTaskButton;
     private Calendar calendar;
@@ -45,33 +52,41 @@ public class AddTaskActivity extends AppCompatActivity {
 
         addTaskButton.setOnClickListener(v -> handleAddTask());
 
-        Spinner statusSpinner = findViewById(R.id.status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this, R.array.status_array, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        statusSpinner.setAdapter(statusAdapter);
+        statusInput.setAdapter(statusAdapter);
 
-        Spinner typeSpinner = findViewById(R.id.type_spinner);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type_array, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeAdapter);
-
+        typeInput.setAdapter(typeAdapter);
     }
 
     private void showDateTimePicker() {
-        final Calendar currentDate = Calendar.getInstance();
-        calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    calendar.set(year, month, dayOfMonth);
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this,
-                            (view1, hourOfDay, minute) -> {
-                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                calendar.set(Calendar.MINUTE, minute);
-                                deadlineInput.setText(android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", calendar));
-                            }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false);
-                    timePickerDialog.show();
-                }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE));
-        datePickerDialog.show();
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar.setTimeInMillis(selection);
+            showTimePicker();
+        });
+
+        datePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+    }
+
+    private void showTimePicker() {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTitleText("Select time")
+                .build();
+
+        timePicker.addOnPositiveButtonClickListener(view -> {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+            deadlineInput.setText(android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", calendar));
+        });
+
+        timePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
     private void handleAddTask() {
@@ -87,6 +102,15 @@ public class AddTaskActivity extends AppCompatActivity {
             return;
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        String accountId = sharedPreferences.getString(KEY_ACCOUNT_ID, null);
+        Log.d("AddTaskActivity", "Retrieved account ID: " + accountId); // Debug log
+
+        if (accountId == null) {
+            Toast.makeText(this, "Account ID not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Task newTask = new Task();
         newTask.setTask_title(taskTitle);
         newTask.setCourse(course);
@@ -94,6 +118,7 @@ public class AddTaskActivity extends AppCompatActivity {
         newTask.setTask_deadline(taskDeadline);
         newTask.setTask_status(taskStatus);
         newTask.setTask_type(taskType);
+        newTask.setAccount_id(accountId);
 
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<String> call = apiService.addTask(newTask);

@@ -63,6 +63,7 @@
             app:cornerRadius="21dp"
             app:backgroundTint="@color/black"
             android:fontFamily="@font/roboto_medium"
+<<<<<<< HEAD
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"/>
 
@@ -90,5 +91,40 @@
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textStyle="bold"/>
+=======
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:layout_marginBottom="10dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dont_have_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Don't have an account?"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/register_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=" Register Now"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+>>>>>>> 9d4eac431194ffb60ed3107ba855a5c3eb27186f
     </LinearLayout>
 </LinearLayout>

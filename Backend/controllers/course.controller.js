@@ -1,7 +1,7 @@
 const { pool } = require("../config/db.config.js");
 const { v4: uuidv4 } = require('uuid');
 
-// Function to get all courses
+// Get all courses
 exports.getAllCourse = async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM course");
@@ -12,7 +12,7 @@ exports.getAllCourse = async (req, res) => {
     }
 };
 
-// Function to get a single course by ID
+// Get a single course by ID
 exports.getCourseById = async (req, res) => {
     const { course_id } = req.params;
     try {
@@ -27,7 +27,7 @@ exports.getCourseById = async (req, res) => {
     }
 };
 
-// Function to create a new course
+// Add a new course
 exports.addCourse = async (req, res) => {
     const { course_name, course_code, lecturer } = req.body;
     const course_id = uuidv4(); // Generate UUID for the new course
@@ -43,7 +43,7 @@ exports.addCourse = async (req, res) => {
     }
 };
 
-// Function to update a course by ID
+// Update a course by ID
 exports.updateCourse = async (req, res) => {
     const { course_id } = req.params;
     const { course_name, course_code, lecturer } = req.body;
@@ -62,7 +62,7 @@ exports.updateCourse = async (req, res) => {
     }
 };
 
-// Function to delete a course by ID
+// Delete a course by ID
 exports.deleteCourse = async (req, res) => {
     const { course_id } = req.params;
     try {

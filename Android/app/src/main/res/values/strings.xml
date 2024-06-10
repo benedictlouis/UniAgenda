@@ -10,7 +10,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="fab_content_desc">Add Task</string>
-    <string name="home">Home</string>
+    <string name="task">Task</string>
+    <string name="event">Event</string>
     <string name="profile">Profile</string>
     <string name="title_activity_add_task">AddTaskActivity</string>
     <!-- Strings used for fragments for navigation -->
@@ -29,4 +30,5 @@
     <string name="status_hint">Status</string>
     <string name="type_hint">Type</string>
     <string name="add_task_button_text">Add Task</string>
+    <string name="update_task_button_text">Update Task</string>
 </resources>

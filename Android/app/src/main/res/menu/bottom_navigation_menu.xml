@@ -2,11 +2,16 @@
     <item
         android:id="@+id/page_1"
         android:enabled="true"
-        android:icon="@drawable/home_svgrepo_com"
-        android:title="@string/home"/>
+        android:icon="@drawable/baseline_view_list_24"
+        android:title="@string/task"/>
     <item
         android:id="@+id/page_2"
         android:enabled="true"
-        android:icon="@drawable/person_svgrepo_com"
+        android:icon="@drawable/baseline_event_note_24"
+        android:title="@string/event"/>
+    <item
+        android:id="@+id/page_3"
+        android:enabled="true"
+        android:icon="@drawable/baseline_person_24"
         android:title="@string/profile"/>
 </menu>
