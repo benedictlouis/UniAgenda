@@ -63,6 +63,35 @@
             app:cornerRadius="21dp"
             app:backgroundTint="@color/black"
             android:fontFamily="@font/roboto_medium"
+<<<<<<< HEAD
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dont_have_acc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="Don't have an account?"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/register_now"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:text="Register Now"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+=======
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
             android:layout_marginBottom="10dp"/>
@@ -96,5 +125,6 @@
                 android:textStyle="bold"/>
 
         </LinearLayout>
+>>>>>>> 9d4eac431194ffb60ed3107ba855a5c3eb27186f
     </LinearLayout>
 </LinearLayout>
