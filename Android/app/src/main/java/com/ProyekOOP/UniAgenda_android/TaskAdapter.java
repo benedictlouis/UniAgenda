@@ -44,6 +44,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = filteredTaskList.get(position);
         holder.taskTitle.setText(task.getTask_title());
+        holder.taskCourse.setText(task.getCourse());
         holder.taskDeadline.setText(formatDate(task.getTask_deadline()));
 
         holder.itemView.setOnClickListener(v -> {
@@ -99,11 +100,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        public TextView taskTitle, taskDeadline;
+        public TextView taskTitle, taskCourse, taskDeadline;
 
         public TaskViewHolder(View view) {
             super(view);
             taskTitle = view.findViewById(R.id.task_title);
+            taskCourse = view.findViewById(R.id.task_course);
             taskDeadline = view.findViewById(R.id.task_deadline);
         }
     }

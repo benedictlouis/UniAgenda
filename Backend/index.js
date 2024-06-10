@@ -8,6 +8,7 @@ const port = process.env.PORT;
 const userRoute = require("./routes/user.route.js");
 const courseRoute = require("./routes/course.route.js");
 const taskRoute = require("./routes/task.route.js");
+const eventRoute = require("./routes/event.route.js");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/user", userRoute);
 app.use("/course", courseRoute);
 app.use("/task", taskRoute);
+app.use("/event", eventRoute);
 
 pool.connect(() => {
     console.log("Connected to database");

@@ -26,6 +26,18 @@ exports.getTaskById = async (req, res) => {
     }
 };
 
+// Get task by account ID
+exports.getTaskByUserId = async (req, res) => {
+    const { account_id } = req.params;
+    try {
+        const result = await pool.query("SELECT * FROM task WHERE account_id = $1", [account_id]);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error("Error while fetching tasks:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
 // Add a new task
 exports.addTask = async (req, res) => {
     const { task_title, course, task_description, task_deadline, task_status, task_type, account_id } = req.body;

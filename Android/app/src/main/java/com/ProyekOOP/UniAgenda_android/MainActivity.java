@@ -3,6 +3,7 @@ package com.ProyekOOP.UniAgenda_android;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,12 +17,12 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
 import com.ProyekOOP.UniAgenda_android.model.Task;
 import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +33,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "mypref";
-    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_ACCOUNT_ID = "account_id";
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
 
@@ -42,10 +43,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        if (!sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
+        String accountId = sharedPreferences.getString(KEY_ACCOUNT_ID, null);
+
+        if (accountId == null) {
+            Toast.makeText(this, "Account ID is missing", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+            return;
         }
 
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
@@ -62,7 +67,15 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.page_1) {
                 return true;
-            } else if (id == R.id.page_2) {
+            }
+
+            else if (id == R.id.page_2) {
+                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            else if (id == R.id.page_3) {
                 Intent intent = new Intent(MainActivity.this, AboutMeActivity.class);
                 startActivity(intent);
                 return true;
@@ -70,10 +83,14 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        Log.d("MainActivity", "Account ID: " + accountId);
+
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        taskAdapter = new TaskAdapter(this, new ArrayList<>());
+        recyclerView.setAdapter(taskAdapter);
 
-        loadTasks();
+        loadTasks(accountId);
     }
 
     @Override
@@ -110,9 +127,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadTasks() {
+    private void loadTasks(String accountId) {
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
-        Call<List<Task>> call = apiService.getAllTask();
+        Call<List<Task>> call = apiService.getTaskByUserId(accountId);
+        Log.d("MainActivity", "Account ID used in request: " + accountId);
 
         call.enqueue(new Callback<List<Task>>() {
             @Override
@@ -122,12 +140,14 @@ public class MainActivity extends AppCompatActivity {
                     taskAdapter = new TaskAdapter(MainActivity.this, tasks);
                     recyclerView.setAdapter(taskAdapter);
                 } else {
-                    Toast.makeText(MainActivity.this, "Failed to load tasks", Toast.LENGTH_SHORT).show();
+                    Log.e("MainActivity", "Failed to load tasks: " + response.message());
+                    Toast.makeText(MainActivity.this, "Failed to load tasks: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Task>> call, Throwable t) {
+                Log.e("MainActivity", "Error: " + t.getMessage());
                 Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

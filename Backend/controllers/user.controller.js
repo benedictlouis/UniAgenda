@@ -8,7 +8,7 @@ exports.login = async function (req, res) {
         const result = await pool.query("SELECT * FROM account WHERE email = $1", [email]);
         
         if (result.rows.length === 0) {
-            return res.status(404).send("Email tidak ditemukan");
+            return res.status(404).send("Email not found!");
         }
         
         const storedPassword = result.rows[0].password;
@@ -16,10 +16,10 @@ exports.login = async function (req, res) {
 
         const passwordMatch = await bcrypt.compare(password, storedPassword);
         if (!passwordMatch) {
-            return res.status(401).send("Password salah");
+            return res.status(401).send("Wrong password!");
         }
                 
-        res.status(200).json({ message: "Login berhasil", account_id: accountId });
+        res.status(200).json({ message: "Login successful!", account_id: accountId });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
@@ -33,7 +33,7 @@ exports.signup = async function (req, res) {
         const accountId = uuidv4(); // Generate UUID
 
         await pool.query("INSERT INTO account (account_id, username, email, password) VALUES ($1, $2, $3, $4)", [accountId, username, email, hashedPassword]);
-        res.status(201).send("Sukses signup");
+        res.status(201).send("Signup successful!");
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server Error");
@@ -57,7 +57,7 @@ exports.updateUser = async function (req, res) {
         const userResult = await pool.query("SELECT * FROM account WHERE account_id = $1", [accountId]);
         
         if (userResult.rows.length === 0) {
-            return res.status(404).send("User tidak ditemukan");
+            return res.status(404).send("User not found");
         }
 
         let updateFields = [];
@@ -84,7 +84,7 @@ exports.updateUser = async function (req, res) {
         }
 
         if (updateFields.length === 0) {
-            return res.status(400).send("Tidak ada data untuk diperbarui");
+            return res.status(400).send("No data to update");
         }
 
         updateValues.push(accountId);

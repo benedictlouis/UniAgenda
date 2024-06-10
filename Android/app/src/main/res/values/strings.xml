@@ -31,4 +31,7 @@
     <string name="type_hint">Type</string>
     <string name="add_task_button_text">Add Task</string>
     <string name="update_task_button_text">Update Task</string>
+    <string name="date_hint">Date</string>
+    <string name="location_hint">Location</string>
+    <string name="add_event_button_text">Add Event</string>"
 </resources>
