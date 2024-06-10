@@ -51,6 +51,14 @@ public interface BaseApiService {
     @POST("/event/addEvent")
     Call<String> addEvent(@Body Event request);
 
+    @GET("/event/getEventById/{event_id}")
+    Call<Event> getEventById(@Path("event_id") int eventId);
+
+    @DELETE("event/deleteEvent/{event_id}")
+    Call<Void> deleteEvent(@Path("event_id") int eventId);
+
+    @PUT ("event/updateEvent/{event_id}")
+    Call<Event> updateEvent(@Path("event_id") int eventId, @Body Event event);
 
 
 }

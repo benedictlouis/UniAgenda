@@ -1,8 +1,6 @@
 package com.ProyekOOP.UniAgenda_android;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -13,8 +11,17 @@ import com.ProyekOOP.UniAgenda_android.model.Task;
 import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,10 +35,11 @@ public class EditTaskActivity extends AppCompatActivity {
     private TextInputEditText deadlineEditText;
     private Spinner statusSpinner;
     private Spinner typeSpinner;
-    private MaterialButton updateButton;
 
     private int taskId;
     private Task task;
+    private Calendar calendar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,8 @@ public class EditTaskActivity extends AppCompatActivity {
         deadlineEditText = findViewById(R.id.edit_deadline_input);
         statusSpinner = findViewById(R.id.edit_status_spinner);
         typeSpinner = findViewById(R.id.edit_type_spinner);
-        updateButton = findViewById(R.id.update_task_button);
+        MaterialButton updateButton = findViewById(R.id.update_task_button);
+        calendar = Calendar.getInstance();
 
         taskId = getIntent().getIntExtra("task_id", -1);
         if (taskId != -1) {
@@ -53,9 +62,7 @@ public class EditTaskActivity extends AppCompatActivity {
             Toast.makeText(this, "Task ID not provided", Toast.LENGTH_SHORT).show();
         }
 
-        updateButton.setOnClickListener(v -> {
-            updateTask();
-        });
+        updateButton.setOnClickListener(v -> updateTask());
 
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this,
                 R.array.status_array, android.R.layout.simple_spinner_item);
@@ -66,7 +73,38 @@ public class EditTaskActivity extends AppCompatActivity {
                 R.array.type_array, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeAdapter);
+
+        deadlineEditText.setOnClickListener(v -> showDateTimePicker());
     }
+
+    private void showDateTimePicker() {
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar.setTimeInMillis(selection);
+            showTimePicker();
+        });
+
+        datePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+    }
+
+    private void showTimePicker() {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTitleText("Select time")
+                .build();
+
+        timePicker.addOnPositiveButtonClickListener(view -> {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+            deadlineEditText.setText(android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", calendar));
+        });
+
+        timePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
+    }
+
 
     private void getTaskById(int taskId) {
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
@@ -139,9 +177,5 @@ public class EditTaskActivity extends AppCompatActivity {
                 Toast.makeText(EditTaskActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        }
-
     }
-
-
+}

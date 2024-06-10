@@ -23,17 +23,9 @@ import retrofit2.Response;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
-    private TextView titleTextView;
-    private TextView courseTextView;
-    private TextView descriptionTextView;
-    private TextView deadlineTextView;
-    private TextView statusTextView;
-    private TextView typeTextView;
-    private MaterialButton editButton;
-    private MaterialButton deleteButton;
-
-    private SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-    private SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
+    private TextView titleTextView, courseTextView, descriptionTextView, deadlineTextView, statusTextView, typeTextView;
+    private final SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+    private final SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +38,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         deadlineTextView = findViewById(R.id.deadline);
         statusTextView = findViewById(R.id.status);
         typeTextView = findViewById(R.id.type);
-        editButton = findViewById(R.id.edit_button);
-        deleteButton = findViewById(R.id.delete_button);
+        MaterialButton editButton = findViewById(R.id.edit_button);
+        MaterialButton deleteButton = findViewById(R.id.delete_button);
 
         int taskId = getIntent().getIntExtra("task_id", -1);
         if (taskId != -1) {
@@ -61,6 +53,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             intent.putExtra("task_id", taskId);
             startActivity(intent);
         });
+
 
         deleteButton.setOnClickListener(v -> {
             if (taskId != -1) {
@@ -123,7 +116,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             return outputFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
-            return dateString;  // Return the original string if parsing fails
+            return dateString;
         }
     }
 }

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const taskRepository = require('../controllers/event.controller.js');
+const eventController = require('../controllers/event.controller.js');
 
-router.get('/getEventByUserId/:account_id', taskRepository.getEventByUserId);
-router.post('/addEvent', taskRepository.addEvent);
-router.put('/updateEvent/:event_id', taskRepository.updateEvent);
-router.delete('/deleteEvent/:event_id', taskRepository.deleteEvent);
-router.get('/getAllEvent', taskRepository.getAllEvent);
+router.get('/getEventByUserId/:account_id', eventController.getEventByUserId);
+router.get('/getEventById/:event_id', eventController.getEventById);
+router.post('/addEvent', eventController.addEvent);
+router.put('/updateEvent/:event_id', eventController.updateEvent);
+router.delete('/deleteEvent/:event_id', eventController.deleteEvent);
+router.get('/getAllEvent', eventController.getAllEvent);
 
 module.exports = router;

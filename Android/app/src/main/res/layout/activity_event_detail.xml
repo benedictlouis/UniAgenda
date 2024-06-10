@@ -5,6 +5,104 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".EventDetailActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/event_card_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="16dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="?attr/colorOutline">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Event Title"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Event Description"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                app:layout_constraintTop_toBottomOf="@+id/event_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+                android:id="@+id/event_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Event Location"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                app:layout_constraintTop_toBottomOf="@+id/event_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+                android:id="@+id/event_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Date: YYYY-MM-DD"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                app:layout_constraintTop_toBottomOf="@+id/event_location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/event_edit_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Edit Event"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/event_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Material3.Button"
+                android:textColor="?attr/colorOnPrimary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/event_delete_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Delete Event"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/event_edit_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Material3.Button"
+                android:textColor="?attr/colorOnSecondary" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
