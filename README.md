@@ -1,6 +1,4 @@
-
-# UniAgenda
-
+# About
 UniAgenda is an application designed to help university students efficiently manage their tasks and events. With UniAgenda, users can easily create, update, and delete tasks and events as needed, keeping track of their academic and extracurricular.
 
 
