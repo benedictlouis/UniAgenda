@@ -12,6 +12,11 @@ import com.ProyekOOP.UniAgenda_android.request.BaseApiService;
 import com.ProyekOOP.UniAgenda_android.request.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +31,9 @@ public class TaskDetailActivity extends AppCompatActivity {
     private TextView typeTextView;
     private MaterialButton editButton;
     private MaterialButton deleteButton;
+
+    private SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+    private SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +82,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                     titleTextView.setText(task.getTask_title());
                     courseTextView.setText("Course: " + task.getCourse());
                     descriptionTextView.setText("Description: " + task.getTask_description());
-                    deadlineTextView.setText("Deadline: " + task.getTask_deadline());
+                    deadlineTextView.setText("Deadline: " + formatDate(task.getTask_deadline()));
                     statusTextView.setText("Status: " + task.getTask_status());
                     typeTextView.setText("Type: " + task.getTask_type());
                 } else {
@@ -107,5 +115,15 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Toast.makeText(TaskDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String formatDate(String dateString) {
+        try {
+            Date date = inputFormat.parse(dateString);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return dateString;  // Return the original string if parsing fails
+        }
     }
 }

@@ -12,18 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ProyekOOP.UniAgenda_android.model.Task;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private Context context;
     private List<Task> taskList;
     private List<Task> filteredTaskList;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+    private SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
 
     public TaskAdapter(Context context, List<Task> taskList) {
         this.context = context;
@@ -42,7 +44,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = filteredTaskList.get(position);
         holder.taskTitle.setText(task.getTask_title());
-        holder.taskDeadline.setText(task.getTask_deadline());
+        holder.taskDeadline.setText(formatDate(task.getTask_deadline()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TaskDetailActivity.class);
@@ -56,18 +58,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return filteredTaskList.size();
     }
 
+    private String formatDate(String dateString) {
+        try {
+            Date date = inputFormat.parse(dateString);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return dateString;  // Return the original string if parsing fails
+        }
+    }
+
     public void filterByDeadline(String deadline) {
         filteredTaskList.clear();
-        for (Task task : taskList) {
-            try {
-                Date taskDate = dateFormat.parse(task.getTask_deadline());
-                Date filterDate = dateFormat.parse(deadline);
-                if (taskDate != null && filterDate != null && taskDate.equals(filterDate)) {
+        try {
+            Date filterDate = inputFormat.parse(deadline);
+            for (Task task : taskList) {
+                Date taskDate = inputFormat.parse(task.getTask_deadline());
+                if (taskDate != null && taskDate.equals(filterDate)) {
                     filteredTaskList.add(task);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         notifyDataSetChanged();
     }

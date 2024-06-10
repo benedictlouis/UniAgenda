@@ -94,6 +94,7 @@ public class EditTaskActivity extends AppCompatActivity {
         courseEditText.setText(task.getCourse());
         descriptionEditText.setText(task.getTask_description());
         deadlineEditText.setText(task.getTask_deadline());
+
         // Set status spinner selection based on task status
         ArrayAdapter<CharSequence> statusAdapter = (ArrayAdapter<CharSequence>) statusSpinner.getAdapter();
         int statusPosition = statusAdapter.getPosition(task.getTask_status());
